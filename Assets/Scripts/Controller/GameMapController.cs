@@ -84,21 +84,7 @@ public class GameMapController : MonoBehaviour {
             }
         }
     }
-    /// <summary>
-    /// 初始化地图
-    /// </summary>
-    void initGameMap()
-    {
-        mapSize.x = 10;
-        mapSize.z = 30;
-        for (int i = 0; i < 11; i++)
-        {
-            for(int j = 0; j < 31; j++)
-            {
-                gameMap[i, j] = 0;
-            }
-        }
-    }
+
     /// <summary>
     /// 判断传入的坐标是否可以移动
     /// </summary>
@@ -111,7 +97,7 @@ public class GameMapController : MonoBehaviour {
         vec.x = -(int)pos.x + 1;
         vec.z = -(int)pos.z + 1;
 
-        if (vec.x < 0 || vec.x > mapSize.x || vec.z < 0 || vec.z > mapSize.z)
+        if (vec.x < 0 || vec.x >= mapSize.x || vec.z < 0 || vec.z >= mapSize.z)
         {
             return false;
         }

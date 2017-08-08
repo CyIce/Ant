@@ -17,6 +17,7 @@ public class AntMovingController : MonoBehaviour {
     };
 
     private GameMapController gameMapController;
+    private RockAttributes attributes;
     //角色每一步的始点和终点
     private Vector3 beginPos;
     private Vector3 endPos;
@@ -130,7 +131,7 @@ public class AntMovingController : MonoBehaviour {
             if (topRock != null && gameObject.transform.position == beginPos) 
             {
                 //如果岩石无法向前移动，则切断角色和岩石的联系
-                if (gameMapController.gameMap[road[1].x, road[1].z] == 1)
+                if (isConllider(endPos - beginPos) == true) 
                 {
                     topRock.transform.parent = movableRockContainer.transform;
                     topRock.GetComponent<RockAttributes>().markingGameMap(topRock.transform.position, true);
@@ -316,7 +317,42 @@ public class AntMovingController : MonoBehaviour {
         {
             topRock = hit.collider.gameObject;
             topRock.transform.parent = gameObject.transform.transform;
-            topRock.GetComponent<RockAttributes>().markingGameMap(topRock.transform.position, false);
+            attributes = topRock.GetComponent<RockAttributes>();
+            attributes.markingGameMap(topRock.transform.position, false);
         }
+    }
+
+    bool isConllider(Vector3 direction)
+    {
+        Vector3 step = Vector3.zero;
+        Vector3 newPosition = topRock.transform.position;
+        int count = 0;
+        direction /= 1.9f;
+        
+        if (direction.x != 0)
+        {
+            direction *= attributes.rockSize.x;
+            count = attributes.rockSize.z;
+            newPosition.z += (count - 1) * 0.5f;
+            step = Vector3.back;
+        }
+        else if(direction.z != 0)
+        {
+            direction *= attributes.rockSize.z;
+            count = attributes.rockSize.x;
+            newPosition.x += (count - 1) * 0.5f;
+            step = Vector3.left;
+        }
+
+        for(int i=1;i<=count;i++)
+        {
+            if(gameMapController.isMovable(newPosition+direction)==false)
+            {
+                return true;
+            }
+            newPosition += step;
+        }
+
+        return false;
     }
 }

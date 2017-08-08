@@ -46,6 +46,10 @@ public class RockAttributes : MonoBehaviour
         {
             for (int j = z; j < zLenght; j++)
             {
+                if (i < 0 || i >=11 || j < 0 || j >= 31)
+                {
+                    int a = 1;
+                }
                 gameMapController.gameMap[i, j] = mark;
             }
         }

@@ -31,7 +31,7 @@ public class StaticRockAttributes : MonoBehaviour {
         {
             for (int j = z; j < zLenght; j++)
             {
-                gameMapController.gameMap[i, j] = 1;
+                gameMapController.gameMap[i + (int)(gameMapController.rainRay.x / 2), j + (int)(gameMapController.rainRay.z / 2)] = 1;
             }
         }
     }

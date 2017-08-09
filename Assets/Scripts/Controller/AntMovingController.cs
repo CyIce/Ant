@@ -143,6 +143,7 @@ public class AntMovingController : MonoBehaviour {
                     topRock.GetComponent<RockAttributes>().markingGameMap(topRock.transform.position, false);
                 }
             }
+
             //控制角色匀速移动
             float distCovered = (Time.time - startTime) * speed;
             float fracJourney = distCovered / journeyLength;
@@ -313,7 +314,7 @@ public class AntMovingController : MonoBehaviour {
     void getTopRock(Vector3 pos)
     {
         RaycastHit hit;
-        if (Physics.Raycast(pos, Vector3.up, out hit, 1))
+        if (Physics.Raycast(pos, gameMapController.rainRay, out hit, 1))
         {
             topRock = hit.collider.gameObject;
             topRock.transform.parent = gameObject.transform.transform;
@@ -326,6 +327,7 @@ public class AntMovingController : MonoBehaviour {
     {
         Vector3 step = Vector3.zero;
         Vector3 newPosition = topRock.transform.position;
+
         int count = 0;
         direction /= 1.9f;
         
@@ -354,5 +356,13 @@ public class AntMovingController : MonoBehaviour {
         }
 
         return false;
+    }
+
+    public void removeRoad()
+    {
+        if(road.Count>1)
+        {
+            road.RemoveRange(2, road.Count-2);
+        }
     }
 }

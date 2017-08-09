@@ -23,6 +23,7 @@ public class GameMapController : MonoBehaviour {
         PAUSE,
         GAME,
         MOVING,
+        SWITCH,
         END,
         Win
     }
@@ -30,11 +31,13 @@ public class GameMapController : MonoBehaviour {
     //游戏地图的大小
     public iVector2 mapSize;
     //用于标记游戏中各个位置的信息
-    public int[,] gameMap = new int[11, 31];
+    public int[,] gameMap = new int[12, 32];
     //用于记录游戏中固定的岩石的位置和大小
     public Vector4[] staticRock;
     //记录当前游戏状态
     public GameState gameState;
+
+    public Vector3 rainRay;
 
     private void Awake()
     {
@@ -42,10 +45,11 @@ public class GameMapController : MonoBehaviour {
     }
 
     void Start ()
-    {
-        
+    { 
         markStaticRock();
-	}
+        rainRay = Vector3.up;
+
+    }
 
     /// <summary>
     /// 将实际的坐标转化为地图的下标
@@ -93,6 +97,8 @@ public class GameMapController : MonoBehaviour {
     public bool isMovable(Vector3 pos)
     {
         iVector2 vec;
+        pos.x -= rainRay.x / 2;
+        pos.z -= rainRay.z / 2;
 
         vec.x = -(int)pos.x + 1;
         vec.z = -(int)pos.z + 1;
@@ -111,6 +117,57 @@ public class GameMapController : MonoBehaviour {
             return true;
         }
 
+    }
+
+    public void moveGameMap(iVector2 moveMap)
+    {
+        int i, j;
+        if (moveMap.x != 0)
+        {
+            if (moveMap.x == 1)
+            {
+                for (i = mapSize.x; i > 0; i--)
+                {
+                    for (j = 0; j <= mapSize.z; j++)
+                    {
+                        gameMap[i, j] = gameMap[i - 1, j];
+                    }
+                }
+            }
+            else if (moveMap.x == -1) 
+            {
+                for (i = 0; i < mapSize.z; i++)
+                {
+                    for (j = 0; j <= mapSize.z; j++)
+                    {
+                        gameMap[i, j] = gameMap[i + 1, j];
+                    }
+                }
+            }
+        }
+        else if(moveMap.z != 0)
+        {
+            if (moveMap.z == 1)
+            {
+                for (i = mapSize.z; i > 0; i--)
+                {
+                    for (j = 0; j <= mapSize.x; j++)
+                    {
+                        gameMap[j, i] = gameMap[j, i-1];
+                    }
+                }
+            }
+            else if (moveMap.z == -1)
+            {
+                for (i = 0; i < mapSize.z; i++)
+                {
+                    for (j = 0; j <= mapSize.x; j++)
+                    {
+                        gameMap[j, i] = gameMap[j, i + 1];
+                    }
+                }
+            }
+        }
     }
 
 }
